@@ -8,7 +8,7 @@ def create_socket():
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         return s
     except socket.error as e:
-        print(f"Could not create socket due to {3}")
+        print(f"Could not create socket due to {e}")
         exit(0)
 
 
@@ -36,7 +36,7 @@ def connect(sk,ip_addr, port):
 
 
 def argument_parser():
-    port = 80
+    port = 5000
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", "--filename", nargs='+',required=True,help="name of the file to read")
     parser.add_argument("-p", "--port", type = int , help="port to connect to ")
@@ -63,7 +63,7 @@ def argument_parser():
 
 def open_file(filename):
     if(os.path.isfile(filename)):
-        content = open(filename, "r")
+        content = open(filename, "r", encoding="utf-8")
         return content.read()
     else:
         return ""
@@ -80,10 +80,6 @@ def main():
         for file in filenames:
             file_content = open_file(file)
 
-            if(file_content == ""):
-                print("No file found")
-                continue
-            
             send(s,str(file_size(file)))
 
             if(recv(s).decode() == "Size received"):

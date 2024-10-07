@@ -7,11 +7,11 @@ def create_socket():
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         return s
     except socket.error as e:
-        print(f"Could not create socket due to {3}")
+        print(f"Could not create socket due to {e}")
         exit(0)
 
 def argument_parser():
-    port = 80
+    port = 5000
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", "--port", type = int , help="port to connect to ")
     args = parser.parse_args()
@@ -63,6 +63,7 @@ def listen(sk):
         exit(0)
 
 def count_char(content):
+    content.replace('\n', '')
     count = 0
     for c in content:
         if c.isalpha():
@@ -95,9 +96,7 @@ def main():
                         if not chunk:
                             break
                         received_content += chunk
-                    
                     char_count = count_char(received_content.decode())
-
                     send(connection,str(char_count))
 
                 else:
@@ -105,6 +104,7 @@ def main():
                     break
     except KeyboardInterrupt as e:
         print("Shutting Server")
+        s.close()
         exit(0)
 
 main()
